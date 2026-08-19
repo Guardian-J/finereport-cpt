@@ -117,4 +117,4 @@ python scripts/check_cpt.py --self-test
 
 ## 许可
 
-本项目采用 MIT License，详见 [LICENSE](LICENSE)。
+本项目采用 MIT License。许可证文件包含英文原文和中文参考译文；如有不一致，以英文原文为准。详见 [LICENSE](LICENSE)。
