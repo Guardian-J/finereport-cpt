@@ -117,4 +117,4 @@ python scripts/check_cpt.py --self-test
 
 ## 许可
 
-暂未指定开源许可证。发布仓库前请由仓库维护者补充适用的许可证文件。
+本项目采用 MIT License，详见 [LICENSE](LICENSE)。
