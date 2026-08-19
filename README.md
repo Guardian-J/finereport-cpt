@@ -1,6 +1,6 @@
 # finereport-cpt
 
-这是一个专门面向帆软 FineReport 报表开发的 Codex skill，服务于 `.cpt` 报表模板的生成、修改、SQL 同步和交付校验。
+这是一个专门面向帆软 FineReport 报表开发的通用 skill，不限定于 Codex，可供不同 AI 助手和自动化工具使用，服务于 `.cpt` 报表模板的生成、修改、SQL 同步和交付校验。
 
 它适用于使用帆软设计器或 FineReport 服务端维护报表模板的场景，不是通用 XML 编辑器，也不是与报表平台无关的通用报表工具。
 
