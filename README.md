@@ -1,6 +1,8 @@
 # finereport-cpt
 
-面向 AI 编程助手和报表开发人员的 FineReport `.cpt` 模板开发 skill。
+这是一个专门面向帆软 FineReport 报表开发的 Codex skill，服务于 `.cpt` 报表模板的生成、修改、SQL 同步和交付校验。
+
+它适用于使用帆软设计器或 FineReport 服务端维护报表模板的场景，不是通用 XML 编辑器，也不是与报表平台无关的通用报表工具。
 
 它把 FineReport 模板中容易被设计器重写或导致空白模板的 XML 结构，整理成可复用的生成、同步和校验流程，适合从 SQL 快速生成基础报表，也适合在保留设计器调整的前提下更新已有模板。
 
@@ -31,6 +33,7 @@ finereport-cpt/
 
 ## 环境
 
+- 目标平台为帆软 FineReport，主要面向 `.cpt` 报表模板开发。
 - Python 3.9 或更高版本。
 - FineReport 11.x 或与目标模板兼容的版本。
 - 帆软服务端已经配置好 SQL 使用的数据连接。
