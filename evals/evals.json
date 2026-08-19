@@ -1,0 +1,33 @@
+{
+  "skill_name": "finereport-cpt",
+  "evals": [
+    {
+      "id": 0,
+      "name": "sql-to-cpt-with-date-param",
+      "prompt": "帮我把这个 SQL 做成帆软报表模板，数据连接用 MY_DB。统计月份要用日期选择控件，格式 yyyyMM，默认上个月，不能空着；记录编号和记录名称是可选的模糊查询。\n\nSELECT\n    t.record_no                 AS 记录编号,\n    t.record_name               AS 记录名称,\n    t.owner_name                AS 负责人名称,\n    round(t.end_amount / 10000) AS 期末金额,\n    round(t.begin_amount_over_3y / 10000) AS 年初三年以上金额,\n    if(coalesce(t.begin_amount, 0) != 0, t.collected_amount / t.begin_amount, 0) AS 完成率\nFROM fact_report_detail t\nWHERE t.snapshot_month LIKE concat(COALESCE(NULLIF('${query_month}', ''), 'YYYYMM'), '%')\n    AND t.record_no LIKE '%${record_no}%'\n    AND t.record_name LIKE '%${record_name}%'\n;",
+      "expected_output": "一个 .cpt 文件：6 列表头 + 6 列数据绑定，3 个参数（query_month 用 DateEditor 且必填、默认 =MONTHDELTA(TODAY(),-1)，另两个用 TextEditor 且非必填），所有控件包在 BoundsWidget 内，参数在数据集和报表两处都有声明，列宽放得下「年初三年以上金额」这类长表头，XML 可被 ElementTree 解析",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "diagnose-blank-template",
+      "prompt": "我用脚本生成的 cpt 在帆软设计器里打开是一片空白，什么都没有。设计器日志里有这么几行：\n\n2026-08-05 17:20:12 严重: ParseError at [row,col]:[1,1] Message: 文件提前结束。\n2026-08-05 17:51:03 严重: com.fr.form.ui.Label cannot be cast to com.fr.form.ui.container.WAbsoluteLayout$BoundsWidget\n\n这是怎么回事，怎么修？",
+      "expected_output": "指出根因是参数面板控件没有包在 WAbsoluteLayout$BoundsWidget 里（WParameterLayout 继承 WAbsoluteLayout，会对每个 Widget 子节点做强转，失败后模板降级成空白 WorkBook），给出正确的 BoundsWidget/InnerWidget/BoundsAttr 嵌套写法，并说明这是生成器要负责的事而不是手工改 XML",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "required-validation-not-working",
+      "prompt": "帆软报表的数据月份参数我设了必填，但预览的时候不填也能直接点查询过去，校验根本没生效。我 cpt 里是这么写的：\n\n<InnerWidget class=\"com.fr.form.ui.DateEditor\">\n<WidgetName name=\"query_month\"/>\n<DateAttr format=\"yyyyMM\" allowBlank=\"false\"/>\n</InnerWidget>\n\n哪里不对？",
+      "expected_output": "指出 allowBlank 虽然定义在 FieldEditor 上但序列化成独立子元素，不是 DateAttr 的属性；正确写法是 <EMSG> + <allowBlank><![CDATA[false]]></allowBlank> 两个独立子节点且排在 <DateAttr> 之前；说明写成属性不报错所以特别难发现",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "header-text-truncated",
+      "prompt": "报表表头里「本年累计金额」「分类名称（不含税）_新增」这几列文字显示不全，被挤成两行了很难看。我想让表头都完整显示在一行里。列宽是默认的 2743200。加 textStyle=\"1\" 好像存一次就没了，有别的办法吗？",
+      "expected_output": "指出 textStyle=1（SINGLELINE）确实能禁止换行但设计器保存时不输出该属性所以靠不住，可靠做法是按表头文字长度加宽列宽（中文约 16px/字 + 留白，34290 单位/px），并给出可执行的调整方式而不是让用户手工改",
+      "files": []
+    }
+  ]
+}
